@@ -3,8 +3,8 @@ import { v5 as uuidv5 } from 'uuid';
 import { Logger } from './Logger';
 import fetch from 'node-fetch';
 import * as moment from 'moment-timezone';
-import UserRepository from '../repositories/UserRepository';
-import { format } from 'rut.js';
+// import UserRepository from '../repositories/UserRepository';
+// import { format } from 'rut.js';
 
 class PublicTenderService {
 
