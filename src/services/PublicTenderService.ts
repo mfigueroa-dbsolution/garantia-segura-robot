@@ -40,6 +40,7 @@ class PublicTenderService {
                 }
             }
 
+            /*
             // Obtener los usuarios regitrados de la Plataforma
             const listUser = await UserRepository.findAll();
 
@@ -51,6 +52,7 @@ class PublicTenderService {
                 }
 
             }
+            */
 
         } catch (error) {
             this.logger.log(`Se produjo el siguiente  ${error}`);
