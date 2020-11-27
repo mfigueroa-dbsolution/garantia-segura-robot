@@ -1,7 +1,7 @@
 // MUST BE FIRST
 require('dotenv').config();
-import config from './config';
-import { createConnection } from 'typeorm';
+// import config from './config';
+// import { createConnection } from 'typeorm';
 
 
 
@@ -34,6 +34,7 @@ import PublicTenderService from './services/PublicTenderService';
 
     server.listen(process.env.PORT, async () => {
         logger.log('App is listening on port: ' + process.env.PORT);
+        /*
         logger.log('Connecting to database...');
         createConnection(config.getOrmConfig()).then(async connection => {
             logger.log('Database successfully connected: ' + connection.name);
@@ -42,6 +43,7 @@ import PublicTenderService from './services/PublicTenderService';
             logger.error('Database error:', e);
             process.exit(1);
         });
+        */
         logger.log('Running the service...');
         await PublicTenderService.initialize();
         logger.log('Finish the service...');
