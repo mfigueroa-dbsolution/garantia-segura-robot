@@ -4,4 +4,4 @@ echo "Installing NPM dependencies..."
 npm install
 
 echo "Compiling typescripts..."
-npm run start
+npm run compile
