@@ -17,7 +17,7 @@ const config = {
             TENDER_URL: 'https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json',
             PROVIDER_URL: 'http://api.mercadopublico.cl/servicios/v1/Publico/Empresas/BuscarProveedor',
             TENDER_ACCESS_TICKET: 'D15B2C0F-F706-4E0B-B0F5-5B56321FE13A',
-
+            
         },
         qa: {
             TENDER_URL: 'https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json',
