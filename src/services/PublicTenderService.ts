@@ -1,18 +1,18 @@
-// import * as AWS from 'aws-sdk';
-// import { v5 as uuidv5 } from 'uuid';
-// import { Logger } from './Logger';
-// import fetch from 'node-fetch';
+import * as AWS from 'aws-sdk';
+import { v5 as uuidv5 } from 'uuid';
+import { Logger } from './Logger';
+import fetch from 'node-fetch';
 // import * as moment from 'moment-timezone';
 
 import UserRepository from "../repositories/UserRepository";
 
-// import { format } from 'rut.js';
+ import { format } from 'rut.js';
 
 class PublicTenderService {
 
-   // private logger = new Logger(this.constructor.name);
+    private logger = new Logger(this.constructor.name);
 
-    // private ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+     private ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
     async initialize(ttl = 31536000000): Promise<void> {
 
@@ -50,7 +50,7 @@ class PublicTenderService {
 
             console.log(listUser.length);
 
-            /*
+            
 
             for (const user of listUser) {
                 const urlProviderList = `${process.env.PROVIDER_URL}?rutempresaproveedor=${format(user.rut)}&ticket=${process.env.TENDER_ACCESS_TICKET}`;
@@ -61,6 +61,8 @@ class PublicTenderService {
 
             }
 
+            /*
+
         } catch (error: any) {
             this.logger.log(`Se produjo el siguiente  ${error}`);
         }
@@ -70,7 +72,7 @@ class PublicTenderService {
 
 
     }
-/*
+
     private runnigRecursiveFetch(url: string, ttl: number): void | PromiseLike<void> {
         return new Promise((resolve, reject) => {
 
@@ -97,7 +99,7 @@ class PublicTenderService {
             recursiveFetch(1);
         });
     }
-
+/*
     private async getData(urlTenederList: string, ttl: number): Promise<any> {
         this.logger.log('Buscando informacion desde DynamoDB');
         let item: AWS.DynamoDB.Types.AttributeMap = await this.getFromDynamoDB(urlTenederList);
@@ -119,7 +121,7 @@ class PublicTenderService {
 
         return item.data;
     }
-
+*/
     async saveJson(url: string, ttl: number, json: any): Promise<any> {
 
         try {
@@ -164,7 +166,7 @@ class PublicTenderService {
             });
         });
     }
-
+/*
     private getFromDynamoDB(url: string): Promise<AWS.DynamoDB.Types.AttributeMap> {
         return new Promise((resolve, reject) => {
 
@@ -184,7 +186,6 @@ class PublicTenderService {
             });
         });
     }
-
 */
 }
 
