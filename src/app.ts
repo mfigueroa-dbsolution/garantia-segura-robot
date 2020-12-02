@@ -8,7 +8,7 @@ import { createConnection } from 'typeorm';
 // Base
 import DefaultEnvVarsInitializer from './services/DefaultEnvVarsInitializer';
 import { Logger } from './services/Logger';
-// import PublicTenderService from './services/PublicTenderService';
+import PublicTenderService from './services/PublicTenderService';
 
 (async () => {
 
@@ -34,18 +34,18 @@ import { Logger } from './services/Logger';
 
     server.listen(process.env.PORT, async () => {
         logger.log('App is listening on port: ' + process.env.PORT);
-        
+
         logger.log('Connecting to database...');
-        createConnection(config.getOrmConfig()).then(async connection => {
+        await createConnection(config.getOrmConfig()).then(async connection => {
             logger.log('Database successfully connected: ' + connection.name);
             logger.log('Service is ready!');
         }).catch(e => {
             logger.error('Database error:', e);
             process.exit(1);
         });
-        
+
         logger.log('Running the service sin IZ...');
-        // await PublicTenderService.initialize();
+        await PublicTenderService.initialize();
         logger.log('Finish the service...');
 
     });

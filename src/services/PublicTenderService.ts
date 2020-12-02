@@ -1,21 +1,25 @@
-import * as AWS from 'aws-sdk';
-import { v5 as uuidv5 } from 'uuid';
-import { Logger } from './Logger';
-import fetch from 'node-fetch';
-import * as moment from 'moment-timezone';
-// import UserRepository from '../repositories/UserRepository';
+// import * as AWS from 'aws-sdk';
+// import { v5 as uuidv5 } from 'uuid';
+// import { Logger } from './Logger';
+// import fetch from 'node-fetch';
+// import * as moment from 'moment-timezone';
+
+import UserRepository from "../repositories/UserRepository";
+
 // import { format } from 'rut.js';
 
 class PublicTenderService {
 
-    private logger = new Logger(this.constructor.name);
+   // private logger = new Logger(this.constructor.name);
 
-    private ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+    // private ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
     async initialize(ttl = 31536000000): Promise<void> {
 
         // Se estará ejecutando continuamente
-        do {
+//        do {
+
+/*
 
         // Tomamos la fecha de AHORA (America/Santiago) al formato DDMMYYYY
         const date = moment.tz('America/Santiago').format('DDMMYYYY');
@@ -39,10 +43,14 @@ class PublicTenderService {
                     await this.saveJson(urlTenderDetail, ttl, jsonTenderDetail);
                 }
             }
+*/
 
-            /*
             // Obtener los usuarios regitrados de la Plataforma
             const listUser = await UserRepository.findAll();
+
+            console.log(listUser.length);
+
+            /*
 
             for (const user of listUser) {
                 const urlProviderList = `${process.env.PROVIDER_URL}?rutempresaproveedor=${format(user.rut)}&ticket=${process.env.TENDER_ACCESS_TICKET}`;
@@ -52,17 +60,17 @@ class PublicTenderService {
                 }
 
             }
-            */
 
-        } catch (error) {
+        } catch (error: any) {
             this.logger.log(`Se produjo el siguiente  ${error}`);
         }
+        */
 
-        } while (true);
+  //      } while (true);
 
 
     }
-
+/*
     private runnigRecursiveFetch(url: string, ttl: number): void | PromiseLike<void> {
         return new Promise((resolve, reject) => {
 
@@ -177,6 +185,7 @@ class PublicTenderService {
         });
     }
 
+*/
 }
 
 export default new PublicTenderService();
