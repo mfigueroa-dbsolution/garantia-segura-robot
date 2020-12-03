@@ -29,7 +29,7 @@ import PublicTenderService from './services/PublicTenderService';
         // Respuesta
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
-        res.end('Hola Mundo\n');
+        res.end('Robot Garantía Segura\n');
     });
 
     server.listen(process.env.PORT, async () => {
@@ -44,7 +44,7 @@ import PublicTenderService from './services/PublicTenderService';
             process.exit(1);
         });
 
-        logger.log('Running the service sin IZ...');
+        logger.log('Running the service...');
         await PublicTenderService.initialize();
         logger.log('Finish the service...');
 

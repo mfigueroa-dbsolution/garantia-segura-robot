@@ -2,74 +2,61 @@ import * as AWS from 'aws-sdk';
 import { v5 as uuidv5 } from 'uuid';
 import { Logger } from './Logger';
 import fetch from 'node-fetch';
-// import * as moment from 'moment-timezone';
-
-import UserRepository from "../repositories/UserRepository";
-
- import { format } from 'rut.js';
+import * as moment from 'moment-timezone';
+import UserRepository from '../repositories/UserRepository';
+import { format } from 'rut.js';
 
 class PublicTenderService {
 
     private logger = new Logger(this.constructor.name);
 
-     private ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+    private ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
     async initialize(ttl = 31536000000): Promise<void> {
 
         // Se estará ejecutando continuamente
-//        do {
+        do {
 
-/*
+            // Tomamos la fecha de AHORA (America/Santiago) al formato DDMMYYYY
+            const date = moment.tz('America/Santiago').format('DDMMYYYY');
 
-        // Tomamos la fecha de AHORA (America/Santiago) al formato DDMMYYYY
-        const date = moment.tz('America/Santiago').format('DDMMYYYY');
+            // Buscar todas las licitaciones (Todas) de la fecha de ahora
+            const urlTenederList = `${process.env.TENDER_URL}?fecha=${date}&estado=Todos&ticket=${process.env.TENDER_ACCESS_TICKET}`;
 
-        // Buscar todas las licitaciones (Todas) de la fecha de ahora
-        const urlTenederList = `${process.env.TENDER_URL}?fecha=${date}&estado=Todos&ticket=${process.env.TENDER_ACCESS_TICKET}`;
+            try {
+                const jsonTenderList = await this.runnigRecursiveFetch(urlTenederList, ttl);
 
-        try {
-            const jsonTenderList = await this.runnigRecursiveFetch(urlTenederList, ttl);
+                await this.saveJson(urlTenederList, ttl, jsonTenderList);
 
-            await this.saveJson(urlTenederList, ttl, jsonTenderList);
+                // Para cada una de las licitaciones, buscar el detalle de la licitación por id
+                const tenderList = await Object(this.getData(urlTenederList, ttl));
 
-            // Para cada una de las licitaciones, buscar el detalle de la licitación por id
-            const tenderList = await Object(this.getData(urlTenederList, ttl));
+                for (const tender of tenderList.Listado) {
 
-            for (const tender of tenderList.Listado) {
-
-                const urlTenderDetail = `${process.env.TENDER_URL}?codigo=${tender.CodigoExterno}&ticket=${process.env.TENDER_ACCESS_TICKET}`;
-                const jsonTenderDetail = Object(await this.runnigRecursiveFetch(urlTenderDetail, ttl));
-                if (jsonTenderDetail.Cantidad) {
-                    await this.saveJson(urlTenderDetail, ttl, jsonTenderDetail);
-                }
-            }
-*/
-
-            // Obtener los usuarios regitrados de la Plataforma
-            const listUser = await UserRepository.findAll();
-
-            console.log(listUser.length);
-
-            
-
-            for (const user of listUser) {
-                const urlProviderList = `${process.env.PROVIDER_URL}?rutempresaproveedor=${format(user.rut)}&ticket=${process.env.TENDER_ACCESS_TICKET}`;
-                const jsonProviderList = Object(await this.runnigRecursiveFetch(urlProviderList, ttl));
-                if (jsonProviderList.Cantidad) {
-                    await this.saveJson(urlProviderList, ttl, jsonProviderList);
+                    const urlTenderDetail = `${process.env.TENDER_URL}?codigo=${tender.CodigoExterno}&ticket=${process.env.TENDER_ACCESS_TICKET}`;
+                    const jsonTenderDetail = Object(await this.runnigRecursiveFetch(urlTenderDetail, ttl));
+                    if (jsonTenderDetail.Cantidad) {
+                        await this.saveJson(urlTenderDetail, ttl, jsonTenderDetail);
+                    }
                 }
 
+                // Obtener los usuarios regitrados de la Plataforma
+                const listUser = await UserRepository.findAll();
+
+                for (const user of listUser) {
+                    const urlProviderList = `${process.env.PROVIDER_URL}?rutempresaproveedor=${format(user.rut)}&ticket=${process.env.TENDER_ACCESS_TICKET}`;
+                    const jsonProviderList = Object(await this.runnigRecursiveFetch(urlProviderList, ttl));
+                    if (jsonProviderList.Cantidad) {
+                        await this.saveJson(urlProviderList, ttl, jsonProviderList);
+                    }
+
+                }
+
+            } catch (error) {
+                this.logger.log(`Se produjo el siguiente  ${error}`);
             }
 
-            /*
-
-        } catch (error: any) {
-            this.logger.log(`Se produjo el siguiente  ${error}`);
-        }
-        */
-
-  //      } while (true);
-
+        } while (true);
 
     }
 
@@ -99,7 +86,7 @@ class PublicTenderService {
             recursiveFetch(1);
         });
     }
-/*
+
     private async getData(urlTenederList: string, ttl: number): Promise<any> {
         this.logger.log('Buscando informacion desde DynamoDB');
         let item: AWS.DynamoDB.Types.AttributeMap = await this.getFromDynamoDB(urlTenederList);
@@ -121,7 +108,7 @@ class PublicTenderService {
 
         return item.data;
     }
-*/
+
     async saveJson(url: string, ttl: number, json: any): Promise<any> {
 
         try {
@@ -166,7 +153,7 @@ class PublicTenderService {
             });
         });
     }
-/*
+
     private getFromDynamoDB(url: string): Promise<AWS.DynamoDB.Types.AttributeMap> {
         return new Promise((resolve, reject) => {
 
@@ -186,7 +173,7 @@ class PublicTenderService {
             });
         });
     }
-*/
+
 }
 
 export default new PublicTenderService();
